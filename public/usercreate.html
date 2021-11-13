@@ -8,37 +8,30 @@
 <body>
 
     <!----------- HTML-elements -------------->    
-    <input id="inpHeading" type="text" /><br>
-    <textarea id="inpBlogtext" cols="80" rows="10"></textarea><br>
-    <button id="btnCreate">Create post</button><br>
+    <h1>Create new user</h1>
+    <input id="inpUsername" type="text" placeholder="User name" />
+    <input id="inpPassword" type="text" placeholder="Password" /><br><br>
+    
+    <button id="btnCreate">Create user</button><br>
     <h3 id="txtResult">Result...</h3>
         
     <!------------- JavaScript --------------->
     <script>
         
-        let inpHeading = document.getElementById('inpHeading');
-        let inpBlogtext = document.getElementById('inpBlogtext');
+        let inpUsername = document.getElementById('inpUsername');
+        let inpPassword = document.getElementById('inpPassword');
         let btnCreate = document.getElementById('btnCreate');
         let txtResult = document.getElementById('txtResult');
 
+        // --------------------------------------
         btnCreate.addEventListener('click', async function(evt) {
             
-            let url = "/blogposts";
-
-            let updata = {
-                heading: inpHeading.value,
-                blogtext: inpBlogtext.value
-            }
-
-            let token = localStorage.getItem("token");
+            let url = "/users";
+            let credString = createCredentialString(inpUsername.value, inpPassword.value);
 
             let cfg = {
                 method: "POST",
-                headers: {
-                    "content-type":"application/json",
-                    "authorization": token
-            },
-                body: JSON.stringify(updata)
+                headers: {"authorization":credString}
             }           
 
             try {                
@@ -55,7 +48,14 @@
                 console.log(error);
                 txtResult.innerHTML = "Something went wrong - check the console window";
             }            
-        });        
+        });
+        
+        // --------------------------------------
+        function createCredentialString(username, password) {
+            let combinedStr = username + ":" + password;
+            let b64Str = btoa(combinedStr);
+            return "basic " + b64Str;
+        }
 
     </script>
 

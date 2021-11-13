@@ -18,17 +18,24 @@
         //-----------------------------------------------
         async function listBlogPosts() {
 
-            let url = "/blogposts";            
+            let url = "/blogposts";
+            
+            let token = localStorage.getItem("token");
+
+            let cfg = {
+                method: "GET",
+                headers: {"authorization": token}
+            }   
 
             try {
-                let response = await fetch(url);
+                let response = await fetch(url, cfg);
                 let data = await response.json();
                 
                 if (response.status != 200) {
                     throw data.error;
                 }
 
-                container.innerHTML = ""; //delete previous content
+                container.innerHTML = "";
                 
                 for (let value of data) {
 
@@ -60,7 +67,8 @@
         //-----------------------------------------------
         async function deleteBlogPost(blogpostId) {
 
-            let url = "/blogposts";
+            let url = "/blogposts"; 
+            let token = localStorage.getItem("token");  
 
             let updata = {
                 id: blogpostId
@@ -68,9 +76,12 @@
 
             let cfg = {
                 method: "DELETE",
-                headers: {"content-type":"application/json"},
+                headers: {
+                    "content-type":"application/json",
+                    "authorization": token
+            },
                 body: JSON.stringify(updata)
-            }           
+            }
 
             try {                
                 let response = await fetch(url, cfg);               

@@ -4,14 +4,18 @@ const PORT = process.env.PORT || 8080;
 server.set("port", PORT);
 
 const blogposts = require("./modules/blogposts.js");
+const users = require("./modules/users.js");
 
 // middleware ---------------------------
 server.use(express.static("public"));
 server.use(express.json());
+
 server.use(blogposts);
+server.use(users);
 
 //general error handling ---------------------------
 server.use(function (err, req, res, next) {
+
 	res.status(500).json({
 		error:'Something went wrong on the server!',
 		descr: err
@@ -20,6 +24,6 @@ server.use(function (err, req, res, next) {
 
 // start server ------------------------------------
 server.listen(server.get("port"), function () {
-	server.get("port");
+	console.log("server running", server.get("port"));
 });
 
